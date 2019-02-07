@@ -14,9 +14,18 @@ app.route('/').get((req, res) => {
 io.on('connection', (socket) => {
     console.log("User has connected:", socket.id);
 
-    socket.on('room', (room) => {
+    socket.on('join room', (room) => {
         socket.join(room);
         io.to(room).emit('emit', room);
+    });
+
+    socket.on('leave room', (id) => {
+        socket.leave('room'+id);
+    });
+
+    socket.on('chat message', (msg, id) => {
+        console.log('room'+id+'|'+msg);
+        io.to('room'+id).emit('emit', msg);
     });
 
     socket.on('disconnect', () => {
