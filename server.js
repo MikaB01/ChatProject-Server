@@ -8,6 +8,10 @@ const bookshelf = require('./database');
 
 app.use(bodyParser.json());
 
+require('./src/model/rooms');
+
+const Room = bookshelf.model('Rooms');
+
 app.route('/').get((req, res) => {
     res.send("ChatProject-Server is running!");
 });
