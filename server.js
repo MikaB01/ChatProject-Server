@@ -4,6 +4,7 @@ const server = require('http').Server(app);
 const io = require('socket.io')(server);
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const bookshelf = require('./database');
 
 app.use(bodyParser.json());
 
@@ -17,6 +18,10 @@ io.on('connection', (socket) => {
     socket.on('join room', (room) => {
         socket.join(room);
         io.to(room).emit('emit', room);
+    });
+
+    socket.on('create room', (room) => {
+        io.emit('emit', room);
     });
 
     socket.on('leave room', (id) => {
