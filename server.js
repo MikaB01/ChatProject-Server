@@ -4,17 +4,13 @@ const server = require('http').Server(app);
 const io = require('socket.io')(server);
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const fs = require('fs');
+const path = require('path');
 
 app.use(cors());
 app.use(bodyParser.json());
-
-require('./src/model/rooms');
-app.use(require('./src/controller/room_controler'));
-
-app.route('/').get(async(req, res) => {
-    res.json('chatProject-Server is running');
-});
-
+const bookshelf = require('./database');
+app.set('bookshelf', bookshelf);
 
 io.on('connection', (socket) => {
     console.log("User has connected:", socket.id);
@@ -37,6 +33,18 @@ io.on('connection', (socket) => {
     });
 
 });
+
+require('./src/model/rooms');
+
+const MODELS_DIR = `${__dirname}/src/model/`;
+  fs.readdirSync(MODELS_DIR)
+    .filter(file => path.extname(file) === '.js')
+    .forEach(file => bookshelf.model(file.split('.')[0], require(MODELS_DIR + file)(app)));
+
+const CONTROLLERS_DIR = `${__dirname}/src/controller/`;
+  fs.readdirSync(CONTROLLERS_DIR)
+    .filter(file => path.extname(file) === '.js')
+    .forEach(file => require(CONTROLLERS_DIR + file)(app));
 
 server.listen(5000, () => {
     console.log("Server stated!\nListening prot: 5000");

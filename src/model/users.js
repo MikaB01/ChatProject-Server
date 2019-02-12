@@ -1,5 +1,7 @@
 'use strict';
 
+const jwt = require('jsonwebtoken');
+
 module.exports = function(app) {
   const bookshelf = app.get('bookshelf');
   
@@ -7,5 +9,5 @@ module.exports = function(app) {
     tableName: 'rooms',
   });
 
-  return bookshelf.model('Rooms', Model);
+  return Model;
 }
