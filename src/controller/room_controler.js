@@ -1,8 +1,7 @@
-
-const express = require('express');
 const ROUTE = '/rooms'
+
 module.exports = function(app) {
-    const router = express.Router();
+    const router = app.get('express').Router();
     const bookshelf = app.get('bookshelf');
     const Room = bookshelf.model('Rooms');
 

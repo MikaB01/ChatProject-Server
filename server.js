@@ -6,11 +6,13 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
+const bookshelf = require('./database');
 
 app.use(cors());
 app.use(bodyParser.json());
-const bookshelf = require('./database');
+
 app.set('bookshelf', bookshelf);
+app.set('express', express);
 
 io.on('connection', (socket) => {
     console.log("User has connected:", socket.id);
@@ -33,8 +35,6 @@ io.on('connection', (socket) => {
     });
 
 });
-
-require('./src/model/rooms');
 
 const MODELS_DIR = `${__dirname}/src/model/`;
   fs.readdirSync(MODELS_DIR)
